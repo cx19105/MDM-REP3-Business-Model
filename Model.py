@@ -3,7 +3,7 @@ import random
 import math
 import numpy.random as np
 import matplotlib.pyplot as plt
-
+import time
 
 class Business:
     def __init__(self):
