@@ -7,20 +7,24 @@ import matplotlib.pyplot as plt
 
 class Business:
     def __init__(self):
+        """
+        Setup all the initial business variables
+        """
         self.MonthlySales = []
         self.IdealPrice = 10
         self.Demand = 0.5
         self.BankAccount = 100
         self.DesiredBankAccount = 0
         self.StockProductionCost = 5
-        self.Price = 1.8*self.StockProductionCost
+        self.Price = 2*self.StockProductionCost
         self.MonthlyStockProduction = 20
         self.Month = 0
         self.UpkeepPerStockCapacity = 1
         self.EndMonth = 1200
         self.Stock = 0
-        self.StockCapacity = 50
+        self.StockCapacity = 20
         self.BankAccountList = []
+        self.InvestAmount = 4500
 
     def Probability(self, Demand):
         """
@@ -35,11 +39,19 @@ class Business:
             return False
 
     def RandomProbability(self):
+        """
+        Returns a random probablity that can be used to show random fluctuations in demand
+        Uses a normal distribution, numpy
+        """
         RandomProbability = np.normal(0, 0.3, 1)
         Probability = RandomProbability*0.3
         return Probability
 
     def ProduceStock(self, BankAccount, Cost, MonthlyProduction, StockSpace):
+        """
+        Function that returns the amount of stock produced,
+        The increase in stock each month
+        """
         ProducedStock = 0
         while (ProducedStock < MonthlyProduction) and BankAccount > 0 and StockSpace != 0:
             BankAccount -= Cost
@@ -113,16 +125,17 @@ class Business:
             if self.BankAccount < self.DesiredBankAccount:
                 self.Price += 1
 
-            ProducedStock, self.BankAccount = self.ProduceStock(self.BankAccount, self.StockProductionCost, self.MonthlyStockProduction, self.StockCapacity-self.Stock)
-            self.Stock += ProducedStock
-            self.MonthlySales.append(ProducedStock)
             self.Demand = self.CalculateDemand(self.Price, self.StockProductionCost)
+            ProducedStock, self.BankAccount = self.ProduceStock(self.BankAccount, self.StockProductionCost, self.MonthlyStockProduction, self.StockCapacity-self.Stock)
             SoldStock, Revenue = self.ConsumerBuyingStock(self.Stock, self.Price, self.Demand)
-            self.Stock -= SoldStock
+            #Adding the change in stock to the current stock
+
+            self.Stock = self.Stock + ProducedStock - SoldStock
+            self.MonthlySales.append(ProducedStock)             
             self.BankAccount += Revenue
             self.BankAccount -= self.MonthlyFixedCostCalculation(self.StockCapacity)
 
-            if self.BankAccount > 4500:
+            if self.BankAccount > self.InvestAmount:
                 SpentMoney, self.MonthlyStockProduction, self.StockCapacity = self.InvestMoney(self.BankAccount, self.MonthlyStockProduction, self.StockCapacity)
                 self.BankAccount -= SpentMoney
             self.Month += 1
