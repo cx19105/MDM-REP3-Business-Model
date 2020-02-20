@@ -16,13 +16,13 @@ class Business:
         self.BankAccount = 100
         self.DesiredBankAccount = 0
         self.StockProductionCost = 5
-        self.Price = 2*self.StockProductionCost
+        self.Price = 1.8*self.StockProductionCost
         self.MonthlyStockProduction = 20
         self.Month = 0
         self.UpkeepPerStockCapacity = 1
         self.EndMonth = 1200
         self.Stock = 0
-        self.StockCapacity = 20
+        self.StockCapacity = 25
         self.BankAccountList = []
         self.InvestAmount = 4500
 
